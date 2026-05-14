@@ -1,0 +1,75 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 25
+      uses: actions/setup-java@v4
+      with:
+        java-version: '25'
+        distribution: 'temurin'
+        cache: gradle
+
+    # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
+    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
+    # Clone OriginsEssentials
+    # - uses: actions/checkout@v4
+    #   with:
+    #     ssh-key: ${{ secrets.DEPLOYMENT_KEY }}
+    #     repository: KingdomsOfArilann/OriginsEssentials
+    #     path: 'OriginsEssentials'
+
+    # Build OriginsEssentials & locally publish to maven so other local projects can find it
+    # - name: Make gradlew executable
+    #   run: chmod +x ./OriginsEssentials/gradlew
+    # - name: Locally Publish OriginsEssentials to Maven with Gradle Wrapper
+    #   run: ./gradlew publishToMavenLocal
+    #   working-directory: ./OriginsEssentials
+
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+    - name: Build with Gradle Wrapper
+      run: ./gradlew jar
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: jars
+        path: build/libs/*.jar
+
+  dependency-submission:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 25
+      uses: actions/setup-java@v4
+      with:
+        java-version: '25'
+        distribution: 'temurin'
+        cache: gradle
+
+    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
+    # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
+    - name: Generate and submit dependency graph
+      uses: gradle/actions/dependency-submission@v3

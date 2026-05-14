@@ -1,0 +1,19 @@
+[versions]
+# @keep 
+jdk = "25"
+lombok = "1.18.46"
+# @keep
+minecraft = "26.1.2"
+paperweight = "2.0.0-beta.21"
+plugin-yml = "0.9.0"
+run-paper = "3.0.2"
+version-catalog = "1.1.0"
+
+[libraries]
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+[plugins]
+catalog-updater = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog" }
+paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
+plugin-yml-paper = { id = "de.eldoria.plugin-yml.paper", version.ref = "plugin-yml" }
+run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-paper" }
