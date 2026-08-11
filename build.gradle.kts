@@ -77,7 +77,7 @@ tasks {
 paper {
     name = project.name
     version = project.version.toString()
-    main = "com.originsrebirth.spigot." + project.name.lowercase().replace("origins", "") + "." + project.name.lowercase().replace("origins", "").capitalize()
+    main = "com.originsrebirth.spigot." + project.name.lowercase().replace("origins", "") + "." + project.name.lowercase().replace("origins", "").replaceFirstChar { it.uppercase() }
     apiVersion = libs.versions.minecraft.get()
     //loader = "com.originsrebirth.spigot." + project.name.lowercase().replace("origins", "") + ".util.DependencyLoader"
     description = ""
